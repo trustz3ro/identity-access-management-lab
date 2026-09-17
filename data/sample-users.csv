@@ -1,0 +1,7 @@
+employee_id,first_name,last_name,username,department,job_title,manager,status
+TZ1001,Avery,Collins,acollins,IT,Help Desk Analyst,Jordan Lee,Active
+TZ1002,Morgan,Reed,mreed,Security,Security Analyst,Casey Brooks,Active
+TZ1003,Taylor,Grant,tgrant,Human Resources,HR Specialist,Riley Morgan,Active
+TZ1004,Cameron,Price,cprice,Finance,Finance Analyst,Alex Parker,Active
+TZ1005,Jordan,Lee,jlee,IT,IT Administrator,Robin Carter,Active
+TZ1006,Dakota,James,djames,Finance,Finance Analyst,Alex Parker,Departing
