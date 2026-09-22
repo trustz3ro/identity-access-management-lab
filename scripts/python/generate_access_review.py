@@ -223,7 +223,7 @@ def generate_review(
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=REPORT_HEADERS)
+        writer = csv.DictWriter(file, fieldnames=REPORT_HEADERS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(report_rows)
 
