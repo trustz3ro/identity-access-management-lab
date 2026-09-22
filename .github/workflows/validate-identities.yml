@@ -1,16 +1,21 @@
-name: Validate IAM Identity Data on:
+name: Validate IAM Identity Data
+on:
   push:
     branches:
       - main
-  pull_request: workflow_dispatch: permissions: 
+  pull_request:
+  workflow_dispatch:
+permissions:
   contents: read
 jobs:
   validate-identities:
-    runs-on: ubuntu-latest steps:
+    runs-on: ubuntu-latest
+    steps:
       - name: Check out repository
         uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v5 with:
+        uses: actions/setup-python@v5
+        with:
           python-version: "3.12"
       - name: Validate identity records
         run: python scripts/python/validate_users.py data/sample-users.csv
