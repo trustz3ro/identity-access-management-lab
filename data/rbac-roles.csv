@@ -1,0 +1,6 @@
+job_title,department,required_groups,privileged_role
+Help Desk Analyst,IT,GG-All-Employees;GG-HelpDesk-Analysts,false
+Security Analyst,Security,GG-All-Employees;GG-Security-Analysts;GG-Security-Log-Readers,false
+HR Specialist,Human Resources,GG-All-Employees;GG-HR-Specialists;GG-HR-Records-RW,false
+Finance Analyst,Finance,GG-All-Employees;GG-Finance-Analysts;GG-Finance-Share-RW,false
+IT Administrator,IT,GG-All-Employees;GG-IT-Administrators;GG-HelpDesk-Analysts;GG-Server-Admins,true

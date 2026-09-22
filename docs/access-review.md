@@ -2,37 +2,48 @@
 
 ## Purpose
 
-Access reviews verify that users still require the permissions assigned to them. This helps reduce excessive access, privilege creep, and stale permissions.
+Access reviews verify that users still require their assigned permissions. This lab compares current group memberships with the approved RBAC model to identify excessive access, missing access, direct assignments, privileged access, and stale access for departing identities.
 
-## Review Scope
+## Automated Implementation
 
-The initial lab review will include:
+The review uses these files:
 
-- Active user accounts
-- Department and job role
-- Security group memberships
-- Privileged access
-- Access to sensitive HR and Finance resources
-- Accounts with role changes
-- Disabled or inactive accounts
+- `data/sample-users.csv` — authoritative sample identity records
+- `data/rbac-roles.csv` — approved job-title-to-group mappings
+- `data/group-memberships.csv` — simulated current group memberships
+- `scripts/python/generate_access_review.py` — review and reporting logic
+- `reports/access-review.csv` — generated certification evidence
 
-## Review Questions
+Run the review from the repository root:
 
-For each identity, the reviewer should confirm:
+```bash
+python3 scripts/python/generate_access_review.py
+```
 
-1. Is the user still active?
-2. Is the user's department and role accurate?
-3. Does each group membership have a valid business need?
-4. Is any privileged access still required?
-5. Are there permissions inherited from a previous role?
-6. Should any access be removed or modified?
+The script validates its input schemas and flags:
 
-## Sample Review Statuses
+- Missing role-required groups
+- Access not authorized by the assigned role
+- Direct assignments that should be role-based
+- Privileged access outside approved privileged roles
+- Departing identities that retain group memberships
+- Unknown users, groups, roles, or duplicate memberships
 
-- `Approve` — access remains appropriate.
-- `Modify` — some access should change.
-- `Revoke` — access is no longer required.
-- `Escalate` — additional owner or management review is required.
+## Review Decisions
+
+- `Approve` — assigned access matches the approved role.
+- `Modify` — access or its assignment method requires correction.
+- `Revoke` — retained access must be removed.
+- `Escalate` — privileged or undefined access requires owner review.
+
+## Sample Review Results
+
+| Decision | Count | Example finding |
+|---|---:|---|
+| Approve | 4 | Access matches the approved RBAC role. |
+| Modify | 1 | Security log access is assigned directly instead of through the role. |
+| Revoke | 1 | A departing Finance identity retains active group memberships. |
+| Escalate | 0 | No unapproved privileged access was detected. |
 
 ## Recertification Workflow
 
@@ -43,25 +54,15 @@ Export Current Access
 Compare Role vs RBAC Matrix
         |
         v
-Manager / Owner Review
+Review Exceptions
         |
         v
-Approve | Modify | Revoke
+Approve | Modify | Revoke | Escalate
         |
         v
-Implement Changes
-        |
-        v
-Document Evidence
+Implement and Document Changes
 ```
 
-## Planned Automation
+## Continuous Validation
 
-A Python script will eventually compare sample identity records against expected role assignments and flag potential exceptions such as:
-
-- Unauthorized group memberships
-- Missing required groups
-- Privileged access outside approved roles
-- Users with access from multiple incompatible roles
-
-The resulting report will provide evidence of basic Identity Governance and Administration (IGA) concepts.
+GitHub Actions validates the identity source, generates the access-review report, and uploads the report as a workflow artifact retained for 30 days. This provides repeatable evidence of basic Identity Governance and Administration (IGA), least-privilege, and access-certification controls.

@@ -1,0 +1,7 @@
+employee_id,username,identity_status,job_title,expected_groups,actual_groups,missing_groups,unauthorized_groups,direct_assignments,privileged_access,review_decision,review_notes
+TZ1001,acollins,Active,Help Desk Analyst,GG-All-Employees;GG-HelpDesk-Analysts,GG-All-Employees;GG-HelpDesk-Analysts,,,,,Approve,
+TZ1002,mreed,Active,Security Analyst,GG-All-Employees;GG-Security-Analysts;GG-Security-Log-Readers,GG-All-Employees;GG-Security-Analysts;GG-Security-Log-Readers,,,GG-Security-Log-Readers,,Modify,Replace direct assignments with role-based membership.
+TZ1003,tgrant,Active,HR Specialist,GG-All-Employees;GG-HR-Records-RW;GG-HR-Specialists,GG-All-Employees;GG-HR-Records-RW;GG-HR-Specialists,,,,,Approve,
+TZ1004,cprice,Active,Finance Analyst,GG-All-Employees;GG-Finance-Analysts;GG-Finance-Share-RW,GG-All-Employees;GG-Finance-Analysts;GG-Finance-Share-RW,,,,,Approve,
+TZ1005,jlee,Active,IT Administrator,GG-All-Employees;GG-HelpDesk-Analysts;GG-IT-Administrators;GG-Server-Admins,GG-All-Employees;GG-HelpDesk-Analysts;GG-IT-Administrators;GG-Server-Admins,,,,GG-Server-Admins,Approve,
+TZ1006,djames,Departing,Finance Analyst,GG-All-Employees;GG-Finance-Analysts;GG-Finance-Share-RW,GG-All-Employees;GG-Finance-Analysts;GG-Finance-Share-RW,,,,,Revoke,Departing identity retains active group memberships.
