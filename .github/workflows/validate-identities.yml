@@ -21,9 +21,17 @@ jobs:
         run: python scripts/python/validate_users.py data/sample-users.csv
       - name: Generate RBAC access review
         run: python scripts/python/generate_access_review.py
+      - name: Generate JML action plan
+        run: python scripts/python/generate_jml_plan.py
       - name: Upload access review report
         uses: actions/upload-artifact@v4
         with:
           name: access-review-report
           path: reports/access-review.csv
+          retention-days: 30
+      - name: Upload JML action plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: jml-action-plan
+          path: reports/jml-action-plan.csv
           retention-days: 30

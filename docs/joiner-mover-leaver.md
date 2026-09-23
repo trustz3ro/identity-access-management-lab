@@ -1,66 +1,82 @@
 # Joiner, Mover, Leaver Workflow
 
-The Joiner/Mover/Leaver (JML) process controls identity access throughout an employee's lifecycle.
+The Joiner/Mover/Leaver (JML) process controls identity access throughout an employee lifecycle and prevents stale or excessive permissions.
 
-## Joiner Workflow
+## Automated Implementation
 
-1. HR submits approved employee identity data.
-2. IAM validates required fields such as name, department, manager, title, and start date.
-3. A unique user account is created.
-4. The user is placed in the correct Organizational Unit.
-5. Baseline employee access is assigned.
-6. Role-specific security groups are assigned using the RBAC matrix.
-7. Privileged access, if required, follows a separate approval process.
-8. The account is tested and provisioning is documented.
+The lab uses these files:
 
-### Joiner Validation
+- `data/jml-events.csv` — approved lifecycle requests
+- `data/sample-users.csv` — authoritative identity records
+- `data/rbac-roles.csv` — approved role-to-group mappings
+- `data/group-memberships.csv` — current simulated access
+- `scripts/python/generate_jml_plan.py` — validation and action-plan logic
+- `reports/jml-action-plan.csv` — generated audit evidence
 
-- Correct username convention
-- Correct department and role
-- Correct group memberships
-- No unnecessary privileged groups
-- Account enabled on approved start date
+Run the generator from the repository root:
 
-## Mover Workflow
+```bash
+python3 scripts/python/generate_jml_plan.py
+```
 
-1. HR or management submits an approved role-change request.
-2. IAM identifies the user's existing role and access.
-3. Old role-specific access is reviewed and removed.
-4. New role-specific access is assigned according to the RBAC matrix.
-5. Privileged permissions are reassessed rather than automatically retained.
-6. The final access state is validated and documented.
+The generator is intentionally non-destructive. It validates approved requests and produces an implementation plan before any identity or access changes occur.
 
-### Key Control
+## Implemented Test Scenarios
 
-A mover should not simply accumulate access. Outdated permissions must be removed to prevent privilege creep.
+| Event | Scenario | Planned result |
+|---|---|---|
+| Joiner | Provision Casey Rivers as a Security Analyst | Create and enable the account, place it in the Security OU, and assign baseline and Security groups. |
+| Mover | Transfer Avery Collins from Help Desk Analyst to Security Analyst | Remove obsolete Help Desk access before adding Security access and update the department, title, and OU. |
+| Leaver | Deprovision departing Finance Analyst Dakota James | Disable the account, revoke sessions, remove all Finance groups, and move the account to Disabled Users. |
 
-## Leaver Workflow
+## Joiner Controls
 
-1. HR confirms the employee's separation date/time.
-2. IAM disables the account promptly.
-3. Active role and privileged group memberships are removed.
-4. Remote or application access is revoked where applicable.
-5. The account is moved to the Disabled Users OU.
-6. Ownership of business data or resources is transferred if required.
-7. Deprovisioning actions are documented for audit purposes.
+1. Require an approved HR reference and effective date.
+2. Reject duplicate employee IDs or usernames.
+3. Validate the target department and job title against the RBAC model.
+4. Calculate baseline and role-specific groups.
+5. Require separate review when the target role is privileged.
 
-## Risk Addressed
+## Mover Controls
 
-A strong JML process reduces:
+1. Confirm the employee and current role match authoritative identity data.
+2. Calculate access to remove from the former role.
+3. Calculate acess to add for the new role.
+4. Remove obsolete permissions before granting new access.
+5. Reassess privileged access rather than carrying it forward.
 
-- Unauthorized access
+This prevents privilege creep during transfers.
+
+## Leaver Controls
+
+1. Confirm the employee and current role.
+2. Disable the account and revoke active sessions.
+3. Remove every current group membership.
+4. Move the account to the Disabled Users OU.
+5. Transfer owned business resources and retain audit evidence.
+
+## Sample Result
+
+```text
+JML PLAN COMPLETED: 3 lifecycle events reviewed.
+- Ready: 3
+- Invalid: 0
+```
+
+## Continuous Validation
+
+GitHub Actions runs the identity validator, RBAC access review, and JML action-plan generator on pushes and pull requests. The workflow uploads `jml-action-plan` as an artifact retained for 30 days.
+
+## Active Directory Extension
+
+The generated plan is the approval and validation layer. A later PowerShell phase will execute the approved actions in the Windows Server Active Directory lab and capture screenshots and command evidence.
+
+## Risks Addressed
+
+- Unauthorized or premature provisioning
 - Orphaned accounts
 - Excessive permissions
 - Privilege creep
+- Delayed deprovisioning
 - Insider-risk exposure
-- Audit findings
-
-## Planned Lab Tests
-
-The lab will test at least three scenarios:
-
-- **Joiner:** Provision a new Security Analyst.
-- **Mover:** Transfer a Help Desk Analyst into the Security team and remove obsolete Help Desk access.
-- **Leaver:** Disable and deprovision a departing Finance Analyst.
-
-Screenshots and command output from these tests will be stored in the `evidence/` folder.
+- Incomplete audit evidence

@@ -1,0 +1,4 @@
+event_id,event_type,effective_date,employee_id,username,account_action,ou_action,groups_to_add,groups_to_remove,privileged_review,approval_reference,validation_status,notes
+JML-001,Joiner,2026-09-23,TZ1007,crivers,Create and enable account,Place in OU=Security,GG-All-Employees;GG-Security-Analysts;GG-Security-Log-Readers,,Not required,HR-2026-101,Ready,Provision baseline and role-based access on approved date.
+JML-002,Mover,2026-09-23,TZ1001,acollins,Update department and job title,Move from OU=IT to OU=Security,GG-Security-Analysts;GG-Security-Log-Readers,GG-HelpDesk-Analysts,Not required,HR-2026-102,Ready,Remove obsolete access before granting new access.
+JML-003,Leaver,2026-09-23,TZ1006,djames,Disable account and revoke sessions,Move to OU=Disabled Users,,GG-All-Employees;GG-Finance-Analysts;GG-Finance-Share-RW,Not required,HR-2026-103,Ready,Remove all group memberships and transfer owned resources.
