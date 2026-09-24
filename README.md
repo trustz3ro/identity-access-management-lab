@@ -32,35 +32,48 @@ The IAM process must ensure that:
 5. Access is reviewed periodically.
 6. IAM actions are documented for auditability.
 
-## Planned Lab Environment
+## Lab Environment
 
 | Component | Purpose |
 |---|---|
-| Windows Server / Active Directory | Identity directory and group management |
-| Windows client | Test user authentication and access |
-| PowerShell | User/group provisioning and lifecycle automation |
-| Python | IAM data validation and reporting automation |
-| CSV data | Sample HR identity source |
-| GitHub | Documentation, scripts, evidence, and version control |
+| Python 3 | Identity validation, RBAC review, and JML action planning (implemented) |
+| CSV data | Fictional identity, role, membership, and lifecycle inputs (implemented) |
+| GitHub Actions | Runs validation and publishes report artifacts (implemented) |
+| Windows Server / Active Directory | Directory and group management (planned) |
+| PowerShell | Execution of approved lifecycle actions (planned) |
 
 ## Repository Structure
 
 ```text
 identity-access-management-lab/
 ├── README.md
+├── .github/workflows/validate-identities.yml
+├── data/ (identities, roles, memberships, JML events)
 ├── docs/
 │   ├── architecture.md
 │   ├── rbac-matrix.md
 │   ├── joiner-mover-leaver.md
 │   └── access-review.md
-├── scripts/
-│   ├── powershell/
-│   └── python/
-├── data/
-│   └── sample-users.csv
-└── evidence/
-    └── README.md
+├── scripts/python/ (three generators and validators)
+├── reports/ (generated CSV evidence)
+└── evidence/ (run screenshot and walkthrough)
 ```
+
+## Run the implemented lab
+
+From the repository root with Python 3.12:
+
+```bash
+python3 scripts/python/validate_users.py data/sample-users.csv
+python3 scripts/python/generate_access_review.py
+python3 scripts/python/generate_jml_plan.py
+```
+
+The [RBAC access review](reports/access-review.csv) compares current simulated memberships with the approved roles. In the sample data it produces four `Approve`, one `Modify` (a direct assignment), and one `Revoke` (a departing identity retaining access). The [JML action plan](reports/jml-action-plan.csv) produces three `Ready` rows for a joiner, mover, and leaver. See the [evidence walkthrough](evidence/README.md) for inputs, decisions, and the [successful workflow run](https://github.com/trustz3ro/identity-access-management-lab/actions/runs/35866986539).
+
+For a concise project summary and resume wording, see [portfolio copy](docs/portfolio-copy.md).
+
+**Scope:** This is a fictional, CSV-backed governance simulation. `Ready` means the request passed planning checks; it does not mean an account or group changed. The scripts do not connect to Active Directory or execute provisioning, session revocation, or remediation. GitHub Actions runs the same checks on pushes and pull requests and uploads both reports for 30 days.
 
 ## Roles Used in the Lab
 
@@ -110,13 +123,16 @@ Managers and system owners periodically review user access and confirm that perm
 - [ ] Provision sample users
 - [ ] Test role-based permissions
 - [ ] Automate user provisioning with PowerShell
-- [ ] Build Python access-review report
-- [ ] Capture screenshots and validation evidence
+- [x] Build Python identity validation, access-review report, and JML action planner
+- [x] Capture workflow run screenshot and explain generated evidence
+- [ ] Capture Active Directory and provisioning screenshots after implementation
 - [ ] Document findings and lessons learned
 
 ## Skills Demonstrated
 
-`Identity and Access Management` · `IAM` · `RBAC` · `Active Directory` · `PowerShell` · `Python` · `Least Privilege` · `Access Governance` · `Identity Lifecycle Management` · `Security Administration`
+`Identity and Access Management` · `RBAC` · `Python` · `GitHub Actions` · `Least Privilege` · `Access Reviews` · `Identity Lifecycle Planning` · `CSV Reporting`
+
+Active Directory and PowerShell execution are planned extensions.
 
 ## Author
 
