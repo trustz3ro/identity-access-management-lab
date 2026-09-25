@@ -1,0 +1,6 @@
+request_id,username,group_name,business_reason,manager_approval,owner_approval,security_approval
+REQ-001,acollins,GG-Security-Log-Readers,Investigate help desk escalations,Approved,Approved,Not Required
+REQ-002,jlee,GG-HR-Records-RW,Review personnel records,Approved,Approved,Not Required
+REQ-003,djames,GG-Finance-Share-RW,Continue finance reporting,Approved,Approved,Not Required
+REQ-004,mreed,GG-Server-Admins,Administer production servers,Approved,Approved,Approved
+REQ-005,acollins,GG-HelpDesk-Analysts,Perform help desk duties,Approved,Approved,Not Required

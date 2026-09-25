@@ -36,8 +36,8 @@ The IAM process must ensure that:
 
 | Component | Purpose |
 |---|---|
-| Python 3 | Identity validation, RBAC review, and JML action planning (implemented) |
-| CSV data | Fictional identity, role, membership, and lifecycle inputs (implemented) |
+| Python 3 | Identity validation, RBAC review, JML planning, and access request evaluation (implemented) |
+| CSV data | Fictional identity, role, membership, lifecycle, and request inputs (implemented) |
 | GitHub Actions | Runs validation and publishes report artifacts (implemented) |
 | Windows Server / Active Directory | Directory and group management (planned) |
 | PowerShell | Execution of approved lifecycle actions (planned) |
@@ -48,13 +48,15 @@ The IAM process must ensure that:
 identity-access-management-lab/
 ├── README.md
 ├── .github/workflows/validate-identities.yml
-├── data/ (identities, roles, memberships, JML events)
+├── data/ (identities, roles, memberships, JML events, access requests)
 ├── docs/
 │   ├── architecture.md
 │   ├── rbac-matrix.md
 │   ├── joiner-mover-leaver.md
-│   └── access-review.md
-├── scripts/python/ (three generators and validators)
+│   ├── access-review.md
+│   └── access-requests.md
+├── scripts/python/ (four validators and planners)
+├── tests/ (request policy checks)
 ├── reports/ (generated CSV evidence)
 └── evidence/ (run screenshot and walkthrough)
 ```
@@ -67,13 +69,15 @@ From the repository root with Python 3.12:
 python3 scripts/python/validate_users.py data/sample-users.csv
 python3 scripts/python/generate_access_review.py
 python3 scripts/python/generate_jml_plan.py
+python3 scripts/python/evaluate_access_requests.py
+python3 -m unittest discover -s tests
 ```
 
-The [RBAC access review](reports/access-review.csv) compares current simulated memberships with the approved roles. In the sample data it produces four `Approve`, one `Modify` (a direct assignment), and one `Revoke` (a departing identity retaining access). The [JML action plan](reports/jml-action-plan.csv) produces three `Ready` rows for a joiner, mover, and leaver. See the [evidence walkthrough](evidence/README.md) for inputs, decisions, and the [successful workflow run](https://github.com/trustz3ro/identity-access-management-lab/actions/runs/35866986539).
+The [RBAC access review](reports/access-review.csv) compares current simulated memberships with the approved roles. In the sample data it produces four `Approve`, one `Modify` (a direct assignment), and one `Revoke` (a departing identity retaining access). The [JML action plan](reports/jml-action-plan.csv) produces three `Ready` rows for a joiner, mover, and leaver. The [access request decisions](reports/access-request-decisions.csv) model role and approval checks; see the [request policy](docs/access-requests.md). The [evidence walkthrough](evidence/README.md) explains the earlier inputs, decisions, and [successful workflow run](https://github.com/trustz3ro/identity-access-management-lab/actions/runs/35866986539).
 
 For a concise project summary and resume wording, see [portfolio copy](docs/portfolio-copy.md).
 
-**Scope:** This is a fictional, CSV-backed governance simulation. `Ready` means the request passed planning checks; it does not mean an account or group changed. The scripts do not connect to Active Directory or execute provisioning, session revocation, or remediation. GitHub Actions runs the same checks on pushes and pull requests and uploads both reports for 30 days.
+**Scope:** This is a fictional, CSV-backed governance simulation. `Ready` and `Approve` are planning decisions; neither means an account or group changed. The scripts do not connect to Active Directory or execute provisioning, session revocation, or remediation. GitHub Actions runs the checks on pushes and pull requests and uploads the reports for 30 days.
 
 ## Roles Used in the Lab
 
@@ -124,6 +128,7 @@ Managers and system owners periodically review user access and confirm that perm
 - [ ] Test role-based permissions
 - [ ] Automate user provisioning with PowerShell
 - [x] Build Python identity validation, access-review report, and JML action planner
+- [x] Model access request decisions and approval checks in Python
 - [x] Capture workflow run screenshot and explain generated evidence
 - [ ] Capture Active Directory and provisioning screenshots after implementation
 - [ ] Document findings and lessons learned

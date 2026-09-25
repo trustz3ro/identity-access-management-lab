@@ -23,6 +23,10 @@ jobs:
         run: python scripts/python/generate_access_review.py
       - name: Generate JML action plan
         run: python scripts/python/generate_jml_plan.py
+      - name: Evaluate access requests
+        run: python scripts/python/evaluate_access_requests.py
+      - name: Test access request policy
+        run: python -m unittest discover -s tests
       - name: Upload access review report
         uses: actions/upload-artifact@v4
         with:
@@ -34,4 +38,10 @@ jobs:
         with:
           name: jml-action-plan
           path: reports/jml-action-plan.csv
+          retention-days: 30
+      - name: Upload access request decisions
+        uses: actions/upload-artifact@v4
+        with:
+          name: access-request-decisions
+          path: reports/access-request-decisions.csv
           retention-days: 30

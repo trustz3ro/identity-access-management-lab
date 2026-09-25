@@ -1,0 +1,6 @@
+request_id,username,group_name,decision,reason,proposed_action
+REQ-001,acollins,GG-Security-Log-Readers,Escalate,Group falls outside the assigned RBAC role,None
+REQ-002,jlee,GG-HR-Records-RW,Escalate,Group falls outside the assigned RBAC role,None
+REQ-003,djames,GG-Finance-Share-RW,Reject,Identity is not active,None
+REQ-004,mreed,GG-Server-Admins,Escalate,Group falls outside the assigned RBAC role,None
+REQ-005,acollins,GG-HelpDesk-Analysts,No change,Identity already has this group,None
